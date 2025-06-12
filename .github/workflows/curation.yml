@@ -176,7 +176,21 @@ jobs:
         id: create-template 
         run: |
           lastname=$(echo ${{ needs.curation-comment.outputs.author }} | awk -F ' ' '{print $2}')
-          echo $lastname
-          echo $GITHUB_WORKSPACE
-          #mkdir -p $GITHUB_WORKSPACE/$lastname_${{ needs.curation-comment.outputs.author }}
+          template_name=$lastname_${{ needs.curation-comment.outputs.author }}
+          echo $TEMPLATE_NAME >> $GITHUB_OUTPUT
+          mkdir -p $GITHUB_WORKSPACE/inst/curated/$template_name
+          touch $GITHUB_WORKSPACE/inst/curated/$template_name/$template_name_metadata.tsv
  
+      - uses: actions/github-script@v7
+        if: steps.create-template.outputs.TEMPLATE_NAME != ''
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 
+              `
+              Created inst/curated/${{ steps.create-template.outputs.TEMPLATE_NAME }}/${{ steps.create-template.outputs.TEMPLATE_NAME }}_metadata.tsv.
+              `
+            })
