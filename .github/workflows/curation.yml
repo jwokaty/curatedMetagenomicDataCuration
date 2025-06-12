@@ -164,8 +164,6 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
-    container: bioconductor/bioconductor_docker:devel
-
     runs-on: ubuntu-latest
 
     steps:
@@ -179,6 +177,6 @@ jobs:
         run: |
           lastname=$(echo ${{ needs.curation-comment.outputs.author }} | awk -F ' ' '{print $2}')
           echo $lastname
-          echo pwd
+          echo $GITHUB_WORKSPACE
           #mkdir -p $GITHUB_WORKSPACE/$lastname_${{ needs.curation-comment.outputs.author }}
  
