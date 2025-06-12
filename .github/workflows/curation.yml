@@ -175,8 +175,7 @@ jobs:
       - name: Create template 
         id: create-template 
         run: |
-          NAME=${{ needs.curation-comment.outputs.author }}
-          LASTNAME=$(echo $NAME | awk -F ' ' '{print $2}')
+          LASTNAME=$(echo "${{ needs.curation-comment.outputs.author }}" | awk -F ' ' '{print $2}')
           TEMPLATE_NAME=$LASTNAME_${{ needs.curation-comment.outputs.year }}
           echo TEMPLATE_NAME=$TEMPLATE_NAME >> $GITHUB_OUTPUT
           mkdir -p $GITHUB_WORKSPACE/inst/curated/$TEMPLATE_NAME
