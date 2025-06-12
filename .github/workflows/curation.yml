@@ -178,6 +178,7 @@ jobs:
           LASTNAME=$(echo "${{ needs.curation-comment.outputs.author }}" | awk -F ' ' '{print $2}')
           TEMPLATE_NAME=$LASTNAME_${{ needs.curation-comment.outputs.year }}
           echo TEMPLATE_NAME=$TEMPLATE_NAME >> $GITHUB_OUTPUT
+          echo $TEMPLATE_NAME
           mkdir -p $GITHUB_WORKSPACE/inst/curated/$TEMPLATE_NAME
           touch $GITHUB_WORKSPACE/inst/curated/$TEMPLATE_NAME/$TEMPLATE_NAME_metadata.tsv
  
