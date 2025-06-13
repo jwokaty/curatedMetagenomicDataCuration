@@ -184,8 +184,8 @@ jobs:
           github_workspace <- Sys.getenv("GITHUB_WORKSPACE")
           template_name <- paste0(last, "_", year)
           dir <- file.path(github_workspace, "inst/curated", template_name)
-          create.dir(dir)
-          create.file(file.path(dir, paste0(template_name, "_metadata.tsv"))
+          dir.create(dir)
+          file.create(file.path(dir, paste0(template_name, "_metadata.tsv"))
           system(paste0("echo TEMPLATE_NAME=", TEMPLATE_NAME, " >> $GITHUB_OUTPUT"))
         shell: Rscript {0}
  
