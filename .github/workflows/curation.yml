@@ -192,6 +192,12 @@ jobs:
               system(paste0("echo CREATED='false' >> $GITHUB_OUTPUT"))
         shell: Rscript {0}
 
+      - name: Setup git config
+        run: |
+          cd $GITHUB_WORKSPACE
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+
       - name: Commit template
         if: ${{ steps.create-template.outputs.CREATED == 'true' }}
         id: commit-template
