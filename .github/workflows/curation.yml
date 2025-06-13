@@ -194,7 +194,7 @@ jobs:
 
       - name: Setup git config
         run: |
-          cd $GITHUB_WORKSPACE
+          cd $GITHUB_WORKSPACE/curatedMetagenomicDataCuration
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
 
