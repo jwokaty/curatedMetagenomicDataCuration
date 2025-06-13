@@ -183,10 +183,12 @@ jobs:
           last <- unlist(strsplit(author, " "))[2]
           github_workspace <- Sys.getenv("GITHUB_WORKSPACE")
           template_name <- paste0(last, "_", year)
-          dir <- file.path(github_workspace, "inst/curated", template_name)
-          dir.create(dir)
-          file.create(file.path(dir, paste0(template_name, "_metadata.tsv"))
-          system(paste0("echo TEMPLATE_NAME=", TEMPLATE_NAME, " >> $GITHUB_OUTPUT"))
+          print(template_name)
+          print(github_workspace)
+          tempdir <- file.path(github_workspace, "inst/curated", template_name)
+          dir.create(tempdir)
+          file.create(file.path(tempdir, paste0(template_name, "_metadata.tsv"))
+          system(paste0("echo TEMPLATE_NAME=", template_name, " >> $GITHUB_OUTPUT"))
         shell: Rscript {0}
  
       - uses: actions/github-script@v7
