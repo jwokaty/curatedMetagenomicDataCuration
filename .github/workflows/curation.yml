@@ -182,17 +182,26 @@ jobs:
           year <- "${{ needs.curation-comment.outputs.year }}"
           last <- unlist(strsplit(author, " "))[2]
           github_workspace <- Sys.getenv("GITHUB_WORKSPACE")
-          template_name <- paste0(last, "_", year)
-          print(template_name)
-          print(github_workspace)
-          tempdir <- file.path(github_workspace, "inst/curated", template_name)
-          dir.create(tempdir)
-          file.create(file.path(tempdir, paste0(template_name, "_metadata.tsv")))
-          system(paste0("echo TEMPLATE_NAME=", template_name, " >> $GITHUB_OUTPUT"))
+          TEMPLATE <- paste0(last, "_", year)
+          if (!dir.exists(file.path(github_workspace, "inst/curated", TEMPLATE))) {
+              dir.create(file.path(github_workspace, "inst/curated", TEMPLATE))
+              file.create(file.path(tempdir, paste0(TEMPLATE, "_metadata.tsv")))
+              system(paste0("echo TEMPLATE=", TEMPLATE, " >> $GITHUB_OUTPUT"))
+              system(paste0("echo CREATED='true' >> $GITHUB_OUTPUT"))
+          } else
+              system(paste0("echo CREATED='false' >> $GITHUB_OUTPUT"))
         shell: Rscript {0}
+
+      - name: Commit template
+        if: ${{ steps.create-template.outputs.CREATED == 'true' }}
+        id: commit-template
+        run: |
+          git add $GITHUB_WORKSPACE/inst/curated/${{ steps.create-template.outputs.TEMPLATE }}/*.tsv
+          git commit -m "Add ${{ steps.create-template.outputs.TEMPLATE }}"
+          git push origin devel
  
       - uses: actions/github-script@v7
-        if: steps.create-template.outputs.TEMPLATE_NAME != ''
+        if: ${{ steps.create-template.outputs.CREATED == 'true' }}
         with:
           script: |
             github.rest.issues.createComment({
@@ -201,6 +210,6 @@ jobs:
               repo: context.repo.repo,
               body: 
               `
-              Created inst/curated/${{ steps.create-template.outputs.TEMPLATE_NAME }}/${{ steps.create-template.outputs.TEMPLATE_NAME }}_metadata.tsv.
+              Created ${{ steps.create-template.outputs.TEMPLATE }}/${{ steps.create-template.outputs.TEMPLATE }}_metadata.tsv.
               `
             })
