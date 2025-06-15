@@ -185,11 +185,15 @@ jobs:
           full_path <- file.path(github_workspace, "inst/curated", BASE)
           if (!dir.exists(full_path)) {
               dir.create(full_path)
-              study_columns <- c("study_title", "target_condition")
-              write.table(data.frame(col.names = study_columns), sep = "\t",
+              study_df <- data.frame("study_title" = character(),
+                                     "target_condition" = character())
+              write.table(study_df, sep = "\t",
                           file.path(full_path, paste0(BASE, "_study.tsv")))
-              sample_columns <- c("study_name", "target_condition", "pmid", "doi")
-              write.table(data.frame(col.names = sample_columns), sep = "\t",
+              sample_df <- data.frame("study_name" = character(),
+                                      "target_condition" = character(),
+                                      "pmid" = numeric(),
+                                      "doi" = character())
+              write.table(data.frame(sample_df, sep = "\t",
                           file.path(full_path, paste0(BASE, "_sample.tsv")))
               system(paste0("echo BASE=", BASE, " >> $GITHUB_OUTPUT"))
               system(paste0("echo CREATED='true' >> $GITHUB_OUTPUT"))
