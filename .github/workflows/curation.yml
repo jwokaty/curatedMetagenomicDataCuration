@@ -193,7 +193,7 @@ jobs:
                                       "target_condition" = character(),
                                       "pmid" = numeric(),
                                       "doi" = character())
-              write.table(data.frame(sample_df, sep = "\t",
+              write.table(sample_df, sep = "\t",
                           file.path(full_path, paste0(BASE, "_sample.tsv")))
               system(paste0("echo BASE=", BASE, " >> $GITHUB_OUTPUT"))
               system(paste0("echo CREATED='true' >> $GITHUB_OUTPUT"))
