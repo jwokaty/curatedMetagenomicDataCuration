@@ -149,7 +149,7 @@ jobs:
               ### Year
               ${{ steps.get-doi.outputs.YEAR }}
 
-              👋 Thanks for submitting!
+              👋 Thanks for submitting! Attempting to generate templates (may take a few minutes).
               `
             })
 
@@ -170,6 +170,20 @@ jobs:
 
     steps:
 
+      - name: Cache
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            /usr/local/lib/R/site-library
+            /usr/local/lib/R/library
+          key: ${{ runner.os }}-curatedmetagenomicdata-curation
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+         Rscript -e "install.packages('stringr'), repos = 'https://cloud.r-project.org', dependencies = c('Depends', 'Imports'))"
+
       - name: Checkout repository
         id: checkout-repository
         uses: actions/checkout@v4
@@ -187,9 +201,9 @@ jobs:
           full_path <- file.path(github_workspace, "inst/curated", BASE)
           if (!dir.exists(full_path)) {
               dir.create(full_path)
-              study_df <- data.frame(`Study Title` = character(),
+              study_df <- data.frame("Study Title" = character(),
                                      target_condition = character())
-              write.table(study_df, sep = "\t",
+              write.table(study_df, sep = "\t", quote = FALSE,
                           file.path(full_path, paste0(BASE, "_study.tsv")))
               sample_df <- data.frame(study_name = character(),
                                       target_condition = character(),
