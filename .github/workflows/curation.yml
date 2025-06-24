@@ -187,22 +187,23 @@ jobs:
           full_path <- file.path(github_workspace, "inst/curated", BASE)
           if (!dir.exists(full_path)) {
               dir.create(full_path)
-              study_df <- data.frame("Study Title" = character(),
-                                     "target_condition" = character())
+              study_df <- data.frame(`Study Title` = character(),
+                                     target_condition = character())
               write.table(study_df, sep = "\t",
                           file.path(full_path, paste0(BASE, "_study.tsv")))
-              sample_df <- data.frame("study_name" = character(),
-                                      "target_condition" = character(),
-                                      "pmid" = numeric(),
-                                      "doi" = character())
+              sample_df <- data.frame(study_name = character(),
+                                      target_condition = character(),
+                                      pmid = numeric(),
+                                      doi = character())
               write.table(sample_df, sep = "\t",
                           file.path(full_path, paste0(BASE, "_sample.tsv")))
               system(paste0("echo BASE=", BASE, " >> $GITHUB_OUTPUT"))
               system(paste0("echo CREATED='true' >> $GITHUB_OUTPUT"))
               system(paste0("echo MESSAGE='Success: Created' >> $GITHUB_OUTPUT"))
-          } else
+          } else {
               system(paste0("echo CREATED='false' >> $GITHUB_OUTPUT"))
               system(paste0("echo MESSAGE='Failure: Could not create' >> $GITHUB_OUTPUT"))
+          }
         shell: Rscript {0}
 
       - name: Setup git config
