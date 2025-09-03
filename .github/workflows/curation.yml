@@ -45,6 +45,7 @@ jobs:
       - name: Get DOI
         id: get-doi
         run: |
+          library(curatedMetagenomicDataCuration)
           doi <- getPattern("${{ github.event.issue.body }}", "doi")
           bioproject_id <- getPattern("${{ github.event.issue.body }}",
                                       "bioproject")
@@ -139,6 +140,7 @@ jobs:
       - name: Create templates
         id: create-templates
         run: |
+          library(curatedMetagenomicDataCuration)
           BASE <- baseName("${{ needs.curation-comment.outputs.author }}",
                            "${{ needs.curation-comment.outputs.year }}")
           system(paste0("echo BASE=", BASE, " >> $GITHUB_OUTPUT"))
